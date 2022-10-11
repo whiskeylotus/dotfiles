@@ -1,6 +1,8 @@
+[init]
+	defaultBranch = main
 [user]
-#  name = name 
-#  email = email
+  name = whiskeylotus
+  email = 0xpentest@proton.me
 [alias]
 	co = checkout
 	ci = commit
