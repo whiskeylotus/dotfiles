@@ -85,3 +85,6 @@ nnoremap è :bnext<CR>
 
 " Remove trailing space on save
 autocmd BufWritePre *.rst :%s/\s\+$//e
+
+" add colorcolumn for .rst
+au BufReadPost *.rst set colorcolumn=80

@@ -1,3 +1,11 @@
+# Bash commands
+
+alias ll='ls -alF'
+alias grep='grep --color=auto'
+alias ..='cd ..'
+alias mkdir='mkdir -p'
+alias cpr='cp -R'
+
 # Misc
 list_ips() {
   ip a show scope global | awk '/^[0-9]+:/ { sub(/:/,"",$2); iface=$2 } /^[[:space:]]*inet / { split($2, a, "/"); print "[\033[96m" iface"\033[0m] "a[1] }'
