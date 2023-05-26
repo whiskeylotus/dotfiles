@@ -88,3 +88,7 @@ autocmd BufWritePre *.rst :%s/\s\+$//e
 
 " add colorcolumn for .rst
 au BufReadPost *.rst set colorcolumn=80
+
+" indent unindent (check README.md)
+vnoremap < <gv
+vnoremap > >gv
