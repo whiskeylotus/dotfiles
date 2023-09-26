@@ -92,3 +92,5 @@ au BufReadPost *.rst set colorcolumn=80
 " indent unindent (check README.md)
 vnoremap < <gv
 vnoremap > >gv
+
+colorscheme evening
