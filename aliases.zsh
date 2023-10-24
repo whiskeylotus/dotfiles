@@ -29,6 +29,10 @@ do_nmap(){
   sudo nmap -p$(sudo nmap -p- --open --min-rate=3000 -Pn $1 | get_ports) -sCV -oN $1.nmap $1
 }
 
+get_nmap_rst(){
+  ~/dotfiles/scripts/get-rst-from-nmap.sh $1;
+}
+
 # Git related
 alias lg="git log --color=always --graph --format='%C(bold 242)%<|(11)%h -%C(172)%d%C(reset) %s %C(243)(%cr) %C(69)<%an>%C(reset)'"
 

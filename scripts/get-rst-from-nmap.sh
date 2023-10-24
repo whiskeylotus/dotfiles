@@ -20,10 +20,10 @@ echo "      - Description"
 
 # Read the input file line by line and format the output
 grep "tcp" "$input_file" | while IFS= read -r line; do
-    if [[ $line =~ ^([0-9]+\/tcp)[[:space:]]+open[[:space:]]+([^[:space:]]+)[[:space:]]+(.*)$ ]]; then
+if [[ $line =~ ^([0-9]+\/tcp)[[:space:]]+open[[:space:]]+([^[:space:]]+)([[:space:]]+(.*))?$ ]]; then
         protocol="${BASH_REMATCH[1]}"
         service="${BASH_REMATCH[2]}"
-        description="${BASH_REMATCH[3]}"
+        description="${BASH_REMATCH[4]:-n/a}"
 
         # Print the formatted output
         echo "    * - $protocol"
