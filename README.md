@@ -4,6 +4,22 @@ Once the repository is cloned, run ``install.sh``.
 
 [Install Vbox addition](https://gist.github.com/GreepTheSheep/c30ebc58b4ea9f898695c8a2b206e505)
 
+# SSH config
+
+```bash
+Host ssh.dev.azure.com vs-ssh.visualstudio.com
+  Hostname ssh.dev.azure.com
+  HostkeyAlgorithms +ssh-rsa
+  IdentityFile ~/.ssh/azure-ptc
+  IdentitiesOnly yes
+
+Host phishing
+    User ubuntu
+    Hostname 152.228.171.222
+    Port 22
+    IdentityFile ~/.ssh/phishing
+```
+
 # Vim tips
 
 ## Save a file with sudo permissions
