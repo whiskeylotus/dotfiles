@@ -2,6 +2,8 @@
 
 Once the repository is cloned, run ``install.sh``.
 
+[Install Vbox addition](https://gist.github.com/GreepTheSheep/c30ebc58b4ea9f898695c8a2b206e505)
+
 # Vim tips
 
 ## Save a file with sudo permissions
