@@ -47,5 +47,7 @@ alias script_tty_upgrade="echo '/usr/bin/script -qc /bin/bash /dev/null'| xclip 
 alias tty_fix="stty raw -echo; fg; reset"
 alias tty_conf="stty -a | sed 's/;//g' | head -n 1 | sed 's/.*baud /stty /g;s/line.*//g' | xclip -sel clip"
 
+eval "$(register-python-argcomplete --no-defaults exegol)"
+
 export PYTHONPYCACHEPREFIX=~/.cache/cpython
 export PATH=~/.local/bin:$PATH

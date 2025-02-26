@@ -1,8 +1,8 @@
 #!/bin/bash
 
-ln -s ~/dotfiles/.vimrc ~/.vimrc
-ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf
-ln -s ~/dotfiles/.gitconfig ~/.gitconfig
+ln -s ~/dotfiles/config_files/.vimrc ~/.vimrc
+ln -s ~/dotfiles/config_files/.tmux.conf ~/.tmux.conf
+ln -s ~/dotfiles/config_files/.gitconfig ~/.gitconfig
 mkdir -p ~/.cache/vim
 
-echo "source ~/dotfiles/aliases.zsh" >> ~/.zshrc
+echo "source ~/dotfiles/scripts/aliases.zsh" >> ~/.zshrc
