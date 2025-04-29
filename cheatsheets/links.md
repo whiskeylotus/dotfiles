@@ -12,6 +12,7 @@
 - [EDR Silencer](https://github.com/netero1010/EDRSilencer)
 - [BYOSI](https://github.com/oldkingcone/BYOSI)
 - [Mortar](https://github.com/0xsp-SRD/mortar)
+- [eazfuscator](https://www.gapotchenko.com/eazfuscator.net)
 
 ### Articles
 
