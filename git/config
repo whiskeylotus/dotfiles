@@ -1,0 +1,75 @@
+[user]
+	name = whiskeylotus
+	email = 0xpentest@proton.me
+
+[init]
+	defaultBranch = main
+
+[core]
+	editor = vim
+	pager = delta
+	excludesfile = ~/.config/git/ignore
+	autocrlf = input
+
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true
+	followTags = true
+[fetch]
+	prune = true
+	pruneTags = true
+[rebase]
+	autoStash = true
+	autoSquash = true
+	updateRefs = true
+[merge]
+	conflictstyle = zdiff3
+[diff]
+	colorMoved = default
+	algorithm = histogram
+	mnemonicPrefix = true
+[branch]
+	sort = -committerdate
+[rerere]
+	enabled = true
+[help]
+	autocorrect = prompt
+[column]
+	ui = auto
+
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true          ; n / N jump between files
+	line-numbers = true
+	side-by-side = true
+	hyperlinks = true
+	syntax-theme = TwoDark
+	file-style = bold blue
+	file-decoration-style = blue ul
+
+[alias]
+	co = checkout
+	sw = switch
+	ci = commit
+	st = status --short --branch
+	br = branch
+	unstage = restore --staged
+	last = log -1 HEAD --stat
+	amend = commit --amend --no-edit
+	wip = !git add -A && git commit -m 'wip'
+	undo = reset --soft HEAD~1
+	lg = log --color=always --graph --format='%C(bold 242)%<|(11)%h -%C(172)%d%C(reset) %s %C(243)(%cr) %C(69)<%an>%C(reset)'
+	wt = worktree
+	wtl = worktree list
+	cleanup = !git branch --merged | grep -vE '^\\*|main|master' | xargs -r git branch -d
+
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+
+; Per-directory identity. Drop a ~/.config/git/config-work file (see
+; git/config-work.example in the dotfiles repo) and every repo under ~/work
+; picks it up. A missing file here is silently ignored by git.
+[includeIf "gitdir:~/work/"]
+	path = ~/.config/git/config-work

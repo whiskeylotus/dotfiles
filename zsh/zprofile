@@ -1,0 +1,9 @@
+# ~/.zprofile — login shells only.
+
+# Homebrew (Apple Silicon): sets PATH, MANPATH, INFOPATH, HOMEBREW_*
+eval "$(/opt/homebrew/bin/brew shellenv zsh)"
+
+# brew shellenv prepends /opt/homebrew/bin, so re-assert our own bins on top
+typeset -U path PATH
+path=("$DOTFILES/bin" "$HOME/.local/bin" $path)
+export PATH

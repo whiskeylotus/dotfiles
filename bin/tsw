@@ -1,0 +1,47 @@
+#!/bin/bash
+# tsw — tmux switcher/sessionizer.
+# Fuzzy-pick a project (or an active worktree) and attach to its tmux session,
+# creating it if needed. Bound to `prefix f`; also runnable from a plain shell.
+#
+#   tsw            pick interactively
+#   tsw <name>     jump straight to a match
+set -uo pipefail
+
+DEV="${DEV:-$HOME/dev}"
+WORKTREES="$DEV/.worktrees"
+
+# Projects first, worktrees after — so `tsw acme` lands on the repo, not a branch.
+list_targets() {
+  [ -d "$DEV" ] && find "$DEV" -mindepth 1 -maxdepth 1 -type d ! -name '.*' 2>/dev/null | sort
+  [ -d "$HOME/dotfiles" ] && echo "$HOME/dotfiles"
+  [ -d "$WORKTREES" ] && find "$WORKTREES" -mindepth 2 -maxdepth 2 -type d 2>/dev/null | sort
+}
+
+if [ $# -eq 1 ]; then
+  selected=$(list_targets | grep -i -- "$1" | head -1)
+else
+  selected=$(list_targets | fzf \
+    --prompt='project ❯ ' \
+    --header='enter: attach · ctrl-c: cancel' \
+    --preview 'eza --tree --level=2 --color=always --icons=auto {} 2>/dev/null | head -40')
+fi
+
+[ -n "${selected:-}" ] || exit 0
+
+# ~/dev/.worktrees/repo/branch  ->  repo-branch ; anything else -> basename
+case "$selected" in
+  "$WORKTREES"/*) name="$(basename "$(dirname "$selected")")-$(basename "$selected")" ;;
+  *)              name="$(basename "$selected")" ;;
+esac
+name=$(echo "$name" | tr '. :' '___')
+
+if ! tmux has-session -t="$name" 2>/dev/null; then
+  tmux new-session -ds "$name" -c "$selected"
+  tmux rename-window -t "$name:1" "shell"
+fi
+
+if [ -z "${TMUX:-}" ]; then
+  tmux attach-session -t "$name"
+else
+  tmux switch-client -t "$name"
+fi

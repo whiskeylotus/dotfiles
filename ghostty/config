@@ -1,0 +1,63 @@
+# Ghostty — https://ghostty.org/docs/config
+# Reload without restarting: cmd+shift+,
+
+# ------------------------------------------------------------------ look ----
+theme = TokyoNight Storm
+font-family = "JetBrainsMono Nerd Font"
+font-size = 14
+font-thicken = true
+adjust-cell-height = 12%
+
+background-opacity = 0.97
+background-blur = 20
+window-padding-x = 10
+window-padding-y = 8,4
+window-padding-balance = true
+
+# Dim the split you are NOT typing in — the fastest "where is my cursor" cue
+unfocused-split-opacity = 0.82
+unfocused-split-fill = #16161e
+
+cursor-style = block
+cursor-style-blink = false
+mouse-hide-while-typing = true
+
+# ---------------------------------------------------------------- window ----
+window-save-state = always
+window-inherit-working-directory = true
+window-new-tab-position = end
+macos-titlebar-style = tabs
+macos-option-as-alt = true
+confirm-close-surface = true
+quit-after-last-window-closed = false
+
+# ----------------------------------------------------------------- shell ----
+shell-integration = zsh
+shell-integration-features = cursor,sudo,title
+clipboard-read = allow
+clipboard-write = allow
+copy-on-select = clipboard
+scrollback-limit = 100000
+
+# ------------------------------------------------------------ quick term ----
+# A drop-down scratch terminal over any app: ctrl+` from anywhere.
+quick-terminal-position = top
+quick-terminal-animation-duration = 0.1
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
+
+# -------------------------------------------------------------- keybinds ----
+# tmux owns splits inside a session (prefix = ctrl-a). These native splits are
+# for the quick side-by-side that does not deserve a tmux window.
+keybind = cmd+d=new_split:right
+keybind = cmd+shift+d=new_split:down
+keybind = cmd+alt+left=goto_split:left
+keybind = cmd+alt+right=goto_split:right
+keybind = cmd+alt+up=goto_split:up
+keybind = cmd+alt+down=goto_split:down
+keybind = cmd+shift+enter=toggle_split_zoom
+
+keybind = cmd+k=clear_screen
+keybind = cmd+shift+r=reload_config
+keybind = cmd+plus=increase_font_size:1
+keybind = cmd+minus=decrease_font_size:1
+keybind = cmd+zero=reset_font_size

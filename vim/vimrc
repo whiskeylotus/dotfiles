@@ -1,0 +1,75 @@
+" Ported from the Linux config, adjusted for macOS.
+
+set nocompatible
+filetype off
+syntax on
+filetype plugin indent on
+
+set modelines=0
+set encoding=utf-8
+
+" Show line numbers and invisible characters
+set number
+set list
+set listchars=tab:──→,nbsp:_,trail:·
+set listchars+=extends:→,precedes:←
+
+set ruler
+set visualbell
+set laststatus=2
+set showmode
+set showcmd
+set ttyfast
+
+" Whitespace
+set wrap
+set formatoptions=tcqrn1
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set noshiftround
+
+" Cursor motion
+set scrolloff=3
+set backspace=indent,eol,start
+set matchpairs+=<:>
+runtime! macros/matchit.vim
+
+set hidden
+
+" Search
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+nnoremap <silent> <leader><space> :nohlsearch<CR>
+
+" macOS clipboard: y/p use the system clipboard directly
+set clipboard=unnamed
+
+" Undo history that survives closing the file
+set undodir=~/.cache/vim//
+set undofile
+
+" Move by paragraph
+nnoremap ( {
+nnoremap ) }
+
+" Buffers
+nnoremap gb :ls<CR>:buffer<Space>
+nnoremap [b :bprevious<CR>
+nnoremap ]b :bnext<CR>
+" The AZERTY versions from the old config — uncomment if you switch layouts:
+" nnoremap é :bprevious<CR>
+" nnoremap è :bnext<CR>
+
+" Keep the selection after indenting
+vnoremap < <gv
+vnoremap > >gv
+
+" reStructuredText habits
+autocmd BufWritePre *.rst :%s/\s\+$//e
+au BufReadPost *.rst set colorcolumn=80
+
+colorscheme evening

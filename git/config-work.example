@@ -1,0 +1,14 @@
+; Copy to ~/.config/git/config-work (NOT tracked in git) to use a different
+; identity for every repository under ~/work.
+;
+;   cp ~/dotfiles/git/config-work.example ~/.config/git/config-work
+;
+; Verify from inside a repo with:  git config user.email
+
+[user]
+	name = Your Work Name
+	email = you@company.com
+	; signingkey = ~/.ssh/id_work.pub
+
+; [core]
+;	sshCommand = ssh -i ~/.ssh/id_work -o IdentitiesOnly=yes

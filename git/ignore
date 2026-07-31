@@ -1,0 +1,32 @@
+# Global gitignore — things that should never land in anyone's repo.
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Env / secrets
+.env
+.env.local
+.envrc
+
+# Claude Code
+.claude/settings.local.json
+
+# Misc
+*.log
+.direnv/
+node_modules/
+__pycache__/
+.venv/

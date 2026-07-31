@@ -1,0 +1,121 @@
+# ~/.zshrc — interactive shells.
+# Layout: options -> history -> completion -> keys -> plugins -> tools -> prompt
+# Anything you add locally and don't want in git goes in ~/.zshrc.local
+
+# ---------------------------------------------------------------- options ----
+setopt AUTO_CD                # `foo` == `cd foo` when foo is a directory
+setopt AUTO_PUSHD             # cd pushes onto the dir stack (see `d`)
+setopt PUSHD_IGNORE_DUPS
+setopt EXTENDED_GLOB          # ^, #, ~ in globs
+setopt GLOB_DOTS              # globs match dotfiles
+setopt INTERACTIVE_COMMENTS   # allow `# comment` when typing
+setopt NO_BEEP
+setopt NO_FLOW_CONTROL        # frees ctrl-s / ctrl-q
+setopt LONG_LIST_JOBS
+
+# ---------------------------------------------------------------- history ----
+HISTFILE="$XDG_STATE_HOME/zsh/history"
+[[ -d ${HISTFILE:h} ]] || mkdir -p ${HISTFILE:h}
+HISTSIZE=100000
+SAVEHIST=100000
+setopt EXTENDED_HISTORY       # record timestamps
+setopt INC_APPEND_HISTORY     # write as you go, not at exit
+setopt SHARE_HISTORY          # live-share between open shells
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE      # ` command` stays out of history
+setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY            # expand !! instead of running it blind
+
+# ------------------------------------------------------------- completion ----
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+
+autoload -Uz compinit
+_zcompdump="$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+[[ -d ${_zcompdump:h} ]] || mkdir -p ${_zcompdump:h}
+# Full security check once a day, cheap path the rest of the time
+if [[ -n ${_zcompdump}(#qN.mh+24) ]]; then
+  compinit -d "$_zcompdump"
+else
+  compinit -C -d "$_zcompdump"
+fi
+{ zcompile-here() { [[ -s $1 && (! -s ${1}.zwc || $1 -nt ${1}.zwc) ]] && zcompile $1 }
+  zcompile-here "$_zcompdump" } &!
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
+zstyle ':completion:*' special-dirs true
+
+# ----------------------------------------------------------------- keymap ----
+bindkey -e                                    # emacs keys (ctrl-a/e/w/r...)
+bindkey '^[[1;3D' backward-word               # opt-left
+bindkey '^[[1;3C' forward-word                # opt-right
+bindkey '^[[3~'   delete-char
+bindkey '^[^?'    backward-kill-word          # opt-backspace
+
+# up/down search history for what's already typed
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+
+# ctrl-x ctrl-e : edit the current command line in $EDITOR
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^X^E' edit-command-line
+
+# ---------------------------------------------------------------- plugins ----
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
+bindkey '^ ' autosuggest-accept              # ctrl-space accepts the ghost text
+
+# ------------------------------------------------------------------ tools ----
+# fzf: ctrl-r history, ctrl-t files, alt-c cd
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+export FZF_DEFAULT_OPTS="
+  --height 60% --layout=reverse --border=rounded --info=inline
+  --color=fg:-1,bg:-1,hl:#7aa2f7,fg+:#c0caf5,bg+:#292e42,hl+:#7dcfff
+  --color=info:#e0af68,prompt:#7dcfff,pointer:#bb9af7,marker:#9ece6a,spinner:#bb9af7,header:#565f89
+  --bind='ctrl-/:toggle-preview'
+  --bind='ctrl-y:execute-silent(echo {} | pbcopy)'"
+export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always --line-range=:200 {} 2>/dev/null || eza --tree --level=2 --color=always {}'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --color=always {}'"
+export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window=down:3:hidden:wrap --bind='?:toggle-preview'"
+source <(fzf --zsh)
+
+# zoxide: `z <partial>` jumps by frecency, `zi` picks interactively
+eval "$(zoxide init zsh)"
+
+# bat as the man pager, with colors
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export BAT_THEME="TwoDark"
+
+# fnm (node): only activates if you've installed a version — `fnm install --lts`
+command -v fnm >/dev/null && eval "$(fnm env --use-on-cd --shell zsh)" 2>/dev/null
+
+# gh completions
+if command -v gh >/dev/null && [[ ! -f "$XDG_CACHE_HOME/zsh/_gh" ]]; then
+  mkdir -p "$XDG_CACHE_HOME/zsh" && gh completion -s zsh > "$XDG_CACHE_HOME/zsh/_gh" 2>/dev/null
+fi
+fpath=("$XDG_CACHE_HOME/zsh" $fpath)
+
+# -------------------------------------------------- aliases and functions ----
+source "$DOTFILES/zsh/aliases.zsh"
+source "$DOTFILES/zsh/functions.zsh"
+
+# ----------------------------------------------------------------- prompt ----
+eval "$(starship init zsh)"
+
+# ------------------------------------------------------------------ local ----
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+# Syntax highlighting must be sourced LAST — it wraps every widget defined above
+source /opt/homebrew/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null

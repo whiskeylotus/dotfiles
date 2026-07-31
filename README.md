@@ -1,83 +1,47 @@
-# My linux configuration
+# dotfiles
 
-Once the repository is cloned, run ``install.sh``.
+macOS (Apple Silicon) terminal setup built around **Ghostty + tmux + Claude Code**, with a
+visual system that answers "which project, which branch, which pane, which session needs me"
+at a glance.
 
-[Install Vbox addition](https://gist.github.com/GreepTheSheep/c30ebc58b4ea9f898695c8a2b206e505)
+The day-to-day reference is **[CHEATSHEET.md](CHEATSHEET.md)** — or run `cheat` in a shell.
 
-# SSH config
-
-```bash
-Host ssh.dev.azure.com vs-ssh.visualstudio.com
-  Hostname ssh.dev.azure.com
-  HostkeyAlgorithms +ssh-rsa
-  IdentityFile ~/.ssh/azure-ptc
-  IdentitiesOnly yes
-
-Host phishing
-    User ubuntu
-    Hostname 152.228.171.222
-    Port 22
-    IdentityFile ~/.ssh/phishing
-```
-
-# Vim tips
-
-## Save a file with sudo permissions
+## New machine
 
 ```bash
-:w !sudo tee %
+xcode-select --install
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+git clone git@github.com:whiskeylotus/dotfiles.git ~/dotfiles
+~/dotfiles/bootstrap.sh
 ```
 
-## Commands
+Then, once: `gh auth login --git-protocol ssh` and open a fresh terminal.
 
-```bash
-# Undo : u
-# Redo : Ctrl + r
+`bootstrap.sh` installs the `Brewfile`, symlinks configs into place (backing up anything real
+it finds as `*.bak`), creates `~/dev`, and installs tmux plugins. It is idempotent — re-run it
+whenever you add something.
 
-# Copy from sytem clipboard  : "*y
-# Paste from system clipboard: "*p
+## What's here
 
-# Open file : :e
+| Path | |
+|---|---|
+| `Brewfile` | Every package and cask this machine needs |
+| `zsh/` | `zshenv`, `zprofile`, `zshrc`, aliases, functions — no framework, ~40ms startup |
+| `starship/` | Prompt: dir, git, plus `◆ claude` and `⑂ worktree` badges |
+| `ghostty/` | Terminal: Nerd Font, dimmed unfocused splits, `Ctrl+\`` quick terminal |
+| `tmux/` | Prefix `C-a`, per-session colours, Claude session markers, resurrect |
+| `git/` | delta, sensible defaults, aliases, per-directory identities |
+| `claude/` | Global settings, status line, hooks, working preferences |
+| `bin/` | `tsw` project switcher · `cw` Claude-on-a-worktree · `claude-notify` · `github-mcp` |
+| `cheatsheets/` | Older vim/git reference notes |
 
-# Select block of code: vip (visual in paragraph)
-# Select or move code alike: v% (select) % (move)
-# Select last block: gv
+## Conventions
 
-# Indent by two a block (visual): > | >ip (indent in paragraph)
-# Indent block : Vgq
-# Put a block on one line (Visual mode): J (concatenate)
-# Use another formatting tool for a block (Visual block): V!cmd
-# Ex for json: V!jq
+- **Edit files in `~/dotfiles/`**, never the symlinks in `~/.config/`.
+- Projects live in `~/dev`. Claude worktrees in `~/dev/.worktrees/<repo>/<branch>`.
+- Machine-local and secret things go in `~/.zshrc.local` (untracked, sourced automatically).
 
-```
+## Previous life
 
-## Cheatsheets
-
-```
-- "u" undo
-- "I" passer en mode Insert au début de ligne
-- "A" passer en mode Insert en fin de ligne
-- "o" passer en mode Insert à la ligne suivante
-- "O" passer en mode Insert à la ligne précédente
-- "dd" couper une ligne complètement
-- "yy"copier une ligne complètement
-- "p" coller ce qui a été couper/copier
-- :153 aller à la ligne 153 directement
-- / pour faire une recherche
-- ctrl+r : redo
-- "a" mode Insert juste après le curseur
-- "gg" aller à la 1ere ligne
-- "G" aller à la dernière ligne
-- "0" aller au début de la ligne
-- "$" aller à la fin de la ligne
-- "w" aller au mot suivant
-- "dw" couper le prochain mot
-- "2dw" couper les deux prochains mots
-- "." refaire la dernière commande faite
-- "3y⬇️" copier 3 lignes en allant vers le bas
-- "4." refaire la dernière commande 4 fois
-- ctrl+a ajouter 1 au premier nombre rencontré sur la ligne
-- ctrl+x enlève 1 au premier nombre rencontré sur la ligne
-- "d$" supprimer du curseur à la fin de la ligne
-- "d0" supprimer du curseur au début de la ligne
-```
+The Linux/pentest version of these dotfiles is preserved on the
+[`archive/linux-pentest`](../../tree/archive/linux-pentest) branch.

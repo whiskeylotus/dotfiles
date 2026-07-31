@@ -1,0 +1,53 @@
+#!/bin/bash
+# cw — claude worktree. Run a Claude session on its own git worktree so several
+# sessions can work the same repo without fighting over one working tree.
+#
+#   cw <branch>        create/reuse ~/dev/.worktrees/<repo>/<branch>, open a tmux
+#                      window named <branch>, start claude in it
+#   cw --list          show this repo's worktrees
+#   cw --rm <branch>   remove the worktree (branch is kept)
+set -euo pipefail
+
+WORKTREES="${DEV:-$HOME/dev}/.worktrees"
+
+die() { printf '\033[31mcw:\033[0m %s\n' "$1" >&2; exit 1; }
+
+git rev-parse --is-inside-work-tree >/dev/null 2>&1 || die "not inside a git repository"
+
+# main checkout, even when called from inside another worktree
+common=$(git rev-parse --git-common-dir)
+main_root=$(cd "$(dirname "$common")" && pwd)
+repo=$(basename "$main_root")
+
+case "${1:-}" in
+  ''|-h|--help)
+    sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'
+    exit 0 ;;
+  --list|-l)
+    git -C "$main_root" worktree list
+    exit 0 ;;
+  --rm)
+    [ $# -ge 2 ] || die "usage: cw --rm <branch>"
+    git -C "$main_root" worktree remove "$WORKTREES/$repo/$2" && echo "removed $2"
+    exit 0 ;;
+esac
+
+branch="$1"; shift || true
+path="$WORKTREES/$repo/$branch"
+
+if [ ! -d "$path" ]; then
+  mkdir -p "$(dirname "$path")"
+  if git -C "$main_root" show-ref --verify --quiet "refs/heads/$branch"; then
+    git -C "$main_root" worktree add "$path" "$branch"
+  else
+    base=$(git -C "$main_root" symbolic-ref --quiet --short HEAD || echo main)
+    git -C "$main_root" worktree add -b "$branch" "$path" "$base"
+  fi
+  echo "worktree: $path"
+fi
+
+if [ -n "${TMUX:-}" ]; then
+  tmux new-window -c "$path" -n "$branch" "claude ${*:-}"
+else
+  cd "$path" && exec claude "$@"
+fi

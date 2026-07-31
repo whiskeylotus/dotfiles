@@ -1,0 +1,39 @@
+#!/bin/bash
+# Give every tmux session a stable colour derived from its name, so a project
+# always looks the same. Re-run by hooks on new session / new window / rename.
+set -u
+
+command -v tmux >/dev/null || exit 0
+tmux has-session 2>/dev/null || exit 0
+
+PALETTE=(
+  "#7aa2f7" "#9ece6a" "#bb9af7" "#e0af68" "#7dcfff" "#f7768e"
+  "#ff9e64" "#73daca" "#2ac3de" "#b4f9f8" "#ffc777" "#c099ff"
+)
+DARK="#1a1b26"
+BAR="#1f2335"
+DIM="#565f89"
+
+# CRC of the name -> palette index. Same name always gets the same colour.
+color_for() {
+  local sum
+  sum=$(printf '%s' "$1" | cksum | awk '{print $1}')
+  printf '%s' "${PALETTE[$(( sum % ${#PALETTE[@]} ))]}"
+}
+
+while IFS= read -r session; do
+  [ -n "$session" ] || continue
+  color=$(color_for "$session")
+
+  tmux set-option -t "$session" @sess_color "$color"
+  tmux set-option -t "$session" status-left \
+    "#[fg=${DARK},bg=${color},bold] ${session} #[fg=${color},bg=${BAR},nobold]"
+  tmux set-option -t "$session" pane-active-border-style "fg=${color}"
+  tmux set-option -t "$session" message-style "bg=${color},fg=${DARK},bold"
+
+  while IFS= read -r window; do
+    [ -n "$window" ] || continue
+    tmux set-option -w -t "$window" window-status-current-style "fg=${DARK},bg=${color},bold"
+    tmux set-option -w -t "$window" window-status-style "fg=${DIM},bg=${BAR}"
+  done < <(tmux list-windows -t "$session" -F '#{window_id}' 2>/dev/null)
+done < <(tmux list-sessions -F '#{session_name}' 2>/dev/null)

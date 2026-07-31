@@ -1,0 +1,58 @@
+#!/bin/bash
+# claude-notify — Claude Code hook target. Marks the tmux window this session
+# lives in, and raises a macOS notification, but only when you are NOT already
+# looking at that window.
+#
+#   claude-notify done    session finished its turn   -> ✓ green
+#   claude-notify input   session is waiting on you   -> ! yellow
+#   claude-notify clear   you replied                 -> marker removed
+set -uo pipefail
+
+state="${1:-done}"
+
+# Claude sends the hook payload as JSON on stdin; grab cwd for a useful title.
+payload=""
+if [ ! -t 0 ]; then payload=$(cat 2>/dev/null || true); fi
+cwd="$PWD"
+if [ -n "$payload" ] && command -v jq >/dev/null 2>&1; then
+  cwd=$(printf '%s' "$payload" | jq -r '.cwd // empty' 2>/dev/null || true)
+  [ -n "$cwd" ] || cwd="$PWD"
+fi
+project=$(basename "$cwd")
+
+pane="${TMUX_PANE:-}"
+in_tmux=0
+[ -n "${TMUX:-}" ] && [ -n "$pane" ] && in_tmux=1
+
+visible=0
+if [ "$in_tmux" -eq 1 ]; then
+  # window_active: this pane's window is the current one in its session
+  # session_attached: a client is actually looking at that session
+  read -r window_id window_active session_attached <<<"$(
+    tmux display-message -p -t "$pane" '#{window_id} #{window_active} #{session_attached}' 2>/dev/null
+  )" || true
+  [ "${window_active:-0}" = "1" ] && [ "${session_attached:-0}" != "0" ] && visible=1
+fi
+
+if [ "$state" = "clear" ]; then
+  [ "$in_tmux" -eq 1 ] && tmux set-option -uw -t "${window_id:-$pane}" @cc 2>/dev/null
+  exit 0
+fi
+
+# You are already watching this window: nothing to announce.
+[ "$visible" -eq 1 ] && exit 0
+
+if [ "$in_tmux" -eq 1 ] && [ -n "${window_id:-}" ]; then
+  tmux set-option -w -t "$window_id" @cc "$state" 2>/dev/null
+  label=$(tmux display-message -p -t "$window_id" '#{session_name}:#{window_name}' 2>/dev/null || echo "$project")
+else
+  label="$project"
+fi
+
+case "$state" in
+  input) title="Claude needs you"; sound="Funk" ;;
+  *)     title="Claude finished";  sound="Glass" ;;
+esac
+
+osascript -e "display notification \"${label//\"/}\" with title \"$title\" sound name \"$sound\"" >/dev/null 2>&1 &
+exit 0
