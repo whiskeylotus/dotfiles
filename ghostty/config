@@ -37,7 +37,8 @@ shell-integration-features = cursor,sudo,title
 clipboard-read = allow
 clipboard-write = allow
 copy-on-select = clipboard
-scrollback-limit = 100000
+# Bytes, not lines — 100MB is roughly a million lines of output
+scrollback-limit = 100000000
 
 # ------------------------------------------------------------ quick term ----
 # A drop-down scratch terminal over any app: ctrl+` from anywhere.
