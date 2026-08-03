@@ -1,40 +1,79 @@
-# brew bundle --file=~/dotfiles/Brewfile
-# Everything this machine needs, in one place. `brew bundle check` tells you what's missing.
-
-# --- shell -------------------------------------------------------------------
-brew "starship"                     # prompt
-brew "zsh-autosuggestions"          # ghost text from history
-brew "zsh-fast-syntax-highlighting" # colours the command line as you type
-brew "tmux"                         # terminal multiplexer
-
-# --- the daily drivers -------------------------------------------------------
-brew "fzf"                          # fuzzy finder (ctrl-r, ctrl-t, alt-c)
-brew "zoxide"                       # `z` jumps to frecent dirs
-brew "ripgrep"                      # rg: fast grep
-brew "fd"                           # fast find
-brew "eza"                          # ls with icons and git status
-brew "bat"                          # cat with syntax highlighting
-brew "git-delta"                    # git diff renderer
-brew "jq"                           # JSON
-brew "yq"                           # YAML
-brew "tree"
-brew "wget"
-brew "tlrc"                         # tldr: practical command examples
-brew "btop"                         # process/resource monitor
-
-# --- git / github ------------------------------------------------------------
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
+# Modern, maintained replacement for ls
+brew "eza"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Fast and simple Node.js version manager
+brew "fnm"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# GitHub command-line tool
+brew "gh"
+# Distributed revision control system
 brew "git"
-brew "gh"                           # GitHub CLI
-brew "lazygit"                      # git TUI (prefix g in tmux)
-brew "github-mcp-server"            # GitHub MCP for Claude, driven by bin/github-mcp
-
-# --- runtimes (installed on demand) -----------------------------------------
-brew "fnm"                          # node version manager: `fnm install --lts`
-
-# --- apps --------------------------------------------------------------------
-cask "ghostty"
-cask "visual-studio-code"
-cask "google-chrome"
-cask "slack"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
+# GitHub Model Context Protocol server for AI tools
+brew "github-mcp-server"
+# Render markdown on the CLI
+brew "glow"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Simple terminal UI for git commands
+brew "lazygit"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# Cross-shell prompt for astronauts
+brew "starship"
+# Official tldr client written in Rust
+brew "tlrc"
+# Terminal multiplexer
+brew "tmux"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Internet file retriever
+brew "wget"
+# Process YAML, JSON, XML, CSV and properties documents from the CLI
+brew "yq"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# Fish-like fast/unobtrusive autosuggestions for zsh
+brew "zsh-autosuggestions"
+# Feature-rich syntax highlighting for Zsh
+brew "zsh-fast-syntax-highlighting"
+# Desktop password and login vault
 cask "bitwarden"
-cask "font-jetbrains-mono-nerd-font" # required: the whole UI uses Nerd Font glyphs
+cask "font-jetbrains-mono-nerd-font"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Web browser
+cask "google-chrome"
+# Team communication and collaboration software
+cask "slack"
+# Text editor for code, markup and prose
+cask "sublime-text"
+# Open-source code editor
+cask "visual-studio-code"
+vscode "anthropic.claude-code"
+vscode "bierner.markdown-mermaid"
+vscode "bradlc.vscode-tailwindcss"
+vscode "dbaeumer.vscode-eslint"
+vscode "eamodio.gitlens"
+vscode "esbenp.prettier-vscode"
+vscode "github.vscode-github-actions"
+vscode "golang.go"
+vscode "hashicorp.terraform"
+vscode "hediet.vscode-drawio"
+vscode "ms-azuretools.vscode-containers"
+vscode "ms-azuretools.vscode-docker"
+vscode "ms-python.debugpy"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
+vscode "ms-python.vscode-python-envs"
+vscode "ms-vscode.makefile-tools"
+vscode "redhat.vscode-yaml"
+vscode "zxh404.vscode-proto3"
+npm "corepack"

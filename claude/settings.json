@@ -1,13 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "theme": "auto",
-  "includeCoAuthoredBy": true,
   "cleanupPeriodDays": 60,
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh",
-    "padding": 0
-  },
+  "includeCoAuthoredBy": true,
   "permissions": {
     "allow": [
       "Bash(git status:*)",
@@ -68,23 +62,39 @@
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "~/dotfiles/bin/claude-notify done" }
+          {
+            "type": "command",
+            "command": "~/dotfiles/bin/claude-notify done"
+          }
         ]
       }
     ],
     "Notification": [
       {
         "hooks": [
-          { "type": "command", "command": "~/dotfiles/bin/claude-notify input" }
+          {
+            "type": "command",
+            "command": "~/dotfiles/bin/claude-notify input"
+          }
         ]
       }
     ],
     "UserPromptSubmit": [
       {
         "hooks": [
-          { "type": "command", "command": "~/dotfiles/bin/claude-notify clear" }
+          {
+            "type": "command",
+            "command": "~/dotfiles/bin/claude-notify clear"
+          }
         ]
       }
     ]
-  }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 0
+  },
+  "theme": "auto",
+  "model": "fable"
 }
