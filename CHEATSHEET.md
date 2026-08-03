@@ -207,6 +207,8 @@ Type letters in any order — `srcindx` matches `src/components/index.ts`.
 | `ff <name>` | Find files (`fd`) |
 | `fdir <name>` | Find directories |
 | `rg <text>` | Search file contents; `rgh` includes ignored/hidden files |
+| `glow <file.md>` | Render markdown in the terminal; `glow -p` for a pager |
+| `glow` | Browse all markdown in the current directory (TUI, `q` quits) |
 
 ### Functions
 | Command | Action |
