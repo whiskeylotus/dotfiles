@@ -7,3 +7,12 @@ eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 typeset -U path PATH
 path=("$DOTFILES/bin" "$HOME/.local/bin" $path)
 export PATH
+
+# goenv (Go): shims on PATH, GOROOT/GOPATH exported; go-installed tools last
+export GOENV_ROOT="$HOME/.goenv"
+if [[ -d $GOENV_ROOT ]]; then
+  path=("$GOENV_ROOT/bin" $path)
+  eval "$(goenv init -)"
+  path=($path "$GOPATH/bin")
+  export PATH
+fi

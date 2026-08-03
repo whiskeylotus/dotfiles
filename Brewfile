@@ -1,3 +1,5 @@
+# Official Amazon AWS command-line interface
+brew "awscli"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
@@ -34,6 +36,8 @@ brew "tlrc"
 brew "tmux"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
 # Internet file retriever
 brew "wget"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
