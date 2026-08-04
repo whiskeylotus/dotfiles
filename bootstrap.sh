@@ -63,6 +63,18 @@ for d in "$HOME/dev" "$HOME/.cache/zsh" "$HOME/.cache/vim" "$HOME/.local/state/z
   [ -d "$d" ] && skip "${d/#$HOME/~}" || { mkdir -p "$d"; ok "${d/#$HOME/~}"; }
 done
 
+# -------------------------------------------------------------------- kb ----
+# The `kb` function ships with the shell config; the knowledge base itself is a
+# separate repo that may not be on this machine. Absence is fine, not an error.
+info "Knowledge base"
+KB_DIR="${KB:-$HOME/Documents/perso/knowledge_db}"
+if [ -d "$KB_DIR" ]; then
+  ok "${KB_DIR/#$HOME/~}"
+else
+  warn "not found at ${KB_DIR/#$HOME/~} — \`kb\` will say so until you clone it"
+  printf '    %sor set KB=<path> in ~/.zshrc.local%s\n' "$dim" "$reset"
+fi
+
 # ------------------------------------------------------------------- exec ----
 chmod +x "$DOTFILES"/bin/* "$DOTFILES"/claude/statusline.sh 2>/dev/null
 ok "scripts executable"

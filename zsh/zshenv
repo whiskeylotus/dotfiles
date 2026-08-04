@@ -7,6 +7,9 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 
 export DOTFILES="$HOME/dotfiles"
 export DEV="$HOME/dev"
+# Knowledge base — override per machine if it lives elsewhere; `kb` degrades
+# gracefully when the directory is absent.
+export KB="${KB:-$HOME/Documents/perso/knowledge_db}"
 
 export EDITOR="vim"
 export VISUAL="$EDITOR"

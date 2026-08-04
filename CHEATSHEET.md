@@ -214,6 +214,7 @@ Type letters in any order — `srcindx` matches `src/components/index.ts`.
 | Command | Action |
 |---|---|
 | `cheat [term]` | This file, or grep it |
+| `kb [term]` | Search the knowledge base, or browse it with fzf |
 | `extract <archive>` | Unpack anything — zip, tar.gz, tar.xz, 7z… |
 | `killport <port>` | Kill whatever holds a port |
 | `ports` | What's listening right now |

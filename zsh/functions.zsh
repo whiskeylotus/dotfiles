@@ -13,6 +13,24 @@ cheat() {
   fi
 }
 
+# kb [term] — search the knowledge base, or browse it with fzf
+kb() {
+  local root="${KB:-$HOME/Documents/perso/knowledge_db}"
+  [[ -d "$root" ]] || {
+    echo "kb: no knowledge base at ${root/#$HOME/~}" >&2
+    echo "    clone it there, or set KB=<path> in ~/.zshrc.local" >&2
+    return 1
+  }
+  if [[ -n "$1" ]]; then
+    (cd "$root" && rg -i --color=always -B1 -A3 --glob '*.md' "$*") | ${PAGER:-less} -R
+  else
+    local f
+    f=$(cd "$root" && fd -e md --exclude _templates \
+      | fzf --preview 'bat --style=plain --color=always --language=markdown {}' --height 80%) || return
+    bat --style=plain --language=markdown "$root/$f"
+  fi
+}
+
 # extract <archive> — unpack anything without remembering the flags
 extract() {
   [[ -f "$1" ]] || { echo "extract: '$1' is not a file" >&2; return 1 }
